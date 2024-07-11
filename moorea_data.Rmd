@@ -3,11 +3,13 @@ title: "Data - Research"
 author: "Vivaan, Shriya, Luke"
 date: "2024-07-07"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
+``` 
 
 ```{r}
 library(tidyverse)
@@ -33,5 +35,12 @@ noaa_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/NOAA/Parrot
 moorea_alg %>% 
   arrange(desc(Percent_Cover)) %>% 
   relocate(Percent_Cover, .after = Location)
+
+moo_pfish <- moorea_fish %>% 
+  filter(Family == "Scaridae") %>% 
+  arrange(desc(Total_Length))
+
+noaa_pfish <- noaa_fish %>% 
+  arrange(desc(Fork_length_cm))
 ```
 
