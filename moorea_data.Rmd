@@ -1,0 +1,37 @@
+---
+title: "Data - Research"
+author: "Vivaan, Shriya, Luke"
+date: "2024-07-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(lubridate)
+library(ratdat)
+```
+
+```{r}
+#Moorea data bases
+
+moorea_alg <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Annual_Survey_Benthic_Cover_20231211.csv"))
+
+moorea_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Annual_Fish_Survey_20230615.csv"))
+
+moorea_coral <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Lenihan_mapped_corals_20220413.csv"))
+
+#NOAA data bases
+
+noaa_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/NOAA/Parrotfish_surveys_FL2014.csv"))
+```
+```{r}
+moorea_alg %>% 
+  arrange(desc(Percent_Cover)) %>% 
+  relocate(Percent_Cover, .after = Location)
+```
+
