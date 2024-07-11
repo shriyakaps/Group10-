@@ -31,16 +31,22 @@ moorea_coral <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/M
 
 noaa_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/NOAA/Parrotfish_surveys_FL2014.csv"))
 ```
+
+
 ```{r}
-moorea_alg %>% 
+moo_alg <- moorea_alg %>% 
   arrange(desc(Percent_Cover)) %>% 
   relocate(Percent_Cover, .after = Location)
 
 moo_pfish <- moorea_fish %>% 
+  group_by(Site) %>% 
   filter(Family == "Scaridae") %>% 
   arrange(desc(Total_Length))
 
 noaa_pfish <- noaa_fish %>% 
   arrange(desc(Fork_length_cm))
+
+moo_coral <- moorea_coral %>% 
+  arrange(desc(Mortality))
 ```
 
