@@ -19,28 +19,213 @@ library(ratdat)
 ```
 
 ```{r}
-#Moorea data bases
+# #Moorea data bases
+# 
+# moorea_alg <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Annual_Survey_Benthic_Cover_20231211.csv"))
+# 
+# moorea_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Annual_Fish_Survey_20230615.csv"))
+# 
+# moorea_coral <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Lenihan_mapped_corals_20220413.csv"))
+# 
+# #NOAA data bases
+# 
+# noaa_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/NOAA/Parrotfish_surveys_FL2014.csv"))
+# ```
+# ```{r}
+# moorea_alg %>% 
+#   arrange(desc(Percent_Cover)) %>% 
+#   relocate(Percent_Cover, .after = Location)
+# 
+# moo_pfish <- moorea_fish %>% 
+#   filter(Family == "Scaridae") %>% 
+#   arrange(desc(Total_Length))
+# 
+# noaa_pfish <- noaa_fish %>% 
+#   arrange(desc(Fork_length_cm))
+```
 
-moorea_alg <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Annual_Survey_Benthic_Cover_20231211.csv"))
+```{r}
+b = 3
+d = 0.5
+dd = (3*0.7 -1) / (2 * 0.7 * K)
+t = 1:n
 
-moorea_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Annual_Fish_Survey_20230615.csv"))
+exp.simu3 = rep(NaN,n)
 
-moorea_coral <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/MOOREA/MCR_LTER_Lenihan_mapped_corals_20220413.csv"))
+#assigns first value in vector to 100
+exp.simu3[1] <- 100
+exp.simu3[1]
 
-#NOAA data bases
+```
 
-noaa_fish <- read_csv(here("C:/Users/vivaa/Desktop/UCSB SRA/Research/NOAA/Parrotfish_surveys_FL2014.csv"))
+```{r}
+for( i in 2:length(exp.simu3)){
+  births = exp.simu3[i-1] * b
+  recruitment = (births * (d / (1+ (dd * births))))
+  deaths = exp.simu3[i-1] * d
+  exp.simu3[i] = exp.simu3[i-1] + recruitment - deaths
+}
+```
+
+```{r}
+sim_df$pop3 = exp.simu3
+
+```
+#1. You will take the last population model created during the live coding demo and choose one element to become stochastic. What this means, is instead of staying constant for the entire simulation, you will use a probability distribution to add variation in each time step. You may choose one of the following parameters:
+
+#Number of births
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(gam)
+
+```
+
+```{r}
+b = 3
+d = 0.5
+dd = (3*0.7 -1) / (2 * 0.7 * K)
+
+exp.simu4 = rep(NaN,n)
+
+#assigns first value in vector to 100
+exp.simu4[1] <- 100
+exp.simu4[1]
+
+```
+
+```{r}
+for( i in 2:length(exp.simu4)){
+  births = exp.simu4[i-1] * rpois(n=1,b)
+  recruitment = (births * (d / (1+ (dd * births))))
+  deaths = exp.simu4[i-1] * d
+  exp.simu4[i] = exp.simu4[i-1] + recruitment - deaths
+  
+}
+```
+
+
+
+```{r}
+sim_df$pop4 = exp.simu4
+
+ggplot(sim_df)+
+  geom_point(aes(t,pop4), color = "purple")+
+  geom_line(aes(t,pop4), linetype = "dashed")+
+  theme_bw()+
+  labs(x = "Time", y = "Population size")
 ```
 ```{r}
-moorea_alg %>% 
-  arrange(desc(Percent_Cover)) %>% 
-  relocate(Percent_Cover, .after = Location)
 
-moo_pfish <- moorea_fish %>% 
-  filter(Family == "Scaridae") %>% 
-  arrange(desc(Total_Length))
+```
+#3. Run a paired t-test to see if there are significant differences between the model without stochasticity (from the demo) and with stochasticity. Check the assumptions. What test could you perform instead if the assumptions are not met? (10 points)
+```{r}
+t.test(exp.simu3, exp.simu4, paired = TRUE, data = "two.sided")
+``` 
 
-noaa_pfish <- noaa_fish %>% 
-  arrange(desc(Fork_length_cm))
+Our p-test was smaller than the standard 0.05 value, meaning that our data is significant. The null hypothesis is rejected, since the mean difference of the two graphs did not equal zero. 
+# -------------------------------------------------------------------------------------------------
+Part 2 
+
+You will take what you learned from the simulation of population growth and create a simulation for either competition or predation
+
+The equations for these are provided in your lecture 4 slides. You can choose your own parameter values (for things such as r, competitive ability, etc. but they must be realistic). The key difference is you will need to keep track of population values for 2 populations instead of 1. (20 points)
+
+Competition: 
+
+```{r}
+exp.simu5 = rep(NaN, n)
+
+#assigns the first value in vector to 100
+exp.simu5[1] <- 100
+exp.simu5[1]
+
+r1 = 0.78
+K1 = 786
+
+exp.simu6 = rep(NaN, n)
+#assigns the first value in vector to 100
+exp.simu6[1] <- 100
+exp.simu6[1]
+
+r2 = 0.45
+K2 = 1338
 ```
 
+```{r}
+delta_t <- 1
+alpha1 <- -0.5 
+alpha2 <- -0.3
+
+sim_df <- data.frame( t = 1:50)
+
+for(i in 2:length(exp.simu5)) {
+  delta_N1 <- (exp.simu5[i-1] *r1) *((K1-exp.simu5[i-1]+(exp.simu6[i-1]*alpha1))/ K1) * delta_t
+  exp.simu5[i] <- exp.simu5[i-1] + delta_N1
+  
+  delta_N2 <- (exp.simu6[i-1] *r2) *((K2-exp.simu6[i-1]+(exp.simu5[i-1]*alpha2))/ K2) * delta_t
+  exp.simu6[i] <- exp.simu6[i-1] + delta_N2
+}
+
+sim_df$pop5 = exp.simu5
+sim_df$pop6 = exp.simu6
+
+ggplot(sim_df) +
+  geom_point(aes(t , pop5), color = "red") +
+  geom_line(aes(t , pop5), linetype = "dashed") +
+  geom_point(aes(t , pop6), color = "blue") +
+  geom_line(aes(t , pop6), linetype = "dashed") +
+  theme_bw()+
+  labs(x = "Time" , y = "Population Size")
+
+```
+```{r}
+exp.simu7 = rep(NaN, n)
+
+#assigns the first value in vector to 100
+exp.simu7[1] <- 100
+exp.simu7[1]
+
+r3 = 0.78
+K3 = 786
+
+exp.simu8 = rep(NaN, n)
+#assigns the first value in vector to 100
+exp.simu8[1] <- 100
+exp.simu8[1]
+
+r4 = 0.45
+K4 = 1338
+```
+
+```{r}
+delta_t <- 1
+alpha3 <- -0.5
+alpha4 <- -0.9
+
+sim_df <- data.frame( t = 1:50)
+
+for(i in 2:length(exp.simu7)) {
+  delta_N3 <- (exp.simu7[i-1] *r1) *((K1-exp.simu7[i-1]+(exp.simu8[i-1]*alpha3))/ K1) * delta_t
+  exp.simu7[i] <- exp.simu7[i-1] + delta_N3
+  
+  delta_N4 <- (exp.simu8[i-1] *r2) *((K2-exp.simu8[i-1]+(exp.simu7[i-1]*alpha4))/ K2) * delta_t
+  exp.simu8[i] <- exp.simu8[i-1] + delta_N4
+}
+
+sim_df$pop7 = exp.simu7
+sim_df$pop8 = exp.simu8
+
+ggplot(sim_df) +
+  geom_point(aes(t , pop7), color = "green") +
+  geom_line(aes(t , pop7), linetype = "dashed") +
+  geom_point(aes(t , pop8), color = "purple") +
+  geom_line(aes(t , pop8), linetype = "dashed") +
+  theme_bw()+
+  labs(x = "Time" , y = "Population Size")
+
+```
+#Write a short reflection (~100 words) explaining the results of changing parameter values on your two populations. (10 points)
+
+In the second simulation of competition, I changes the alpha values of the two 
