@@ -16,6 +16,7 @@ library(tidyverse)
 library(here)
 library(lubridate)
 library(ratdat)
+library(ggplot2)
 ```
 
 ```{r}
@@ -38,8 +39,8 @@ moo_alg <- moorea_alg %>%
   arrange(desc(Percent_Cover)) %>% 
   relocate(Percent_Cover, .after = Location)
 
-moo_pfish <- moorea_fish %>% 
-  group_by(Site) %>% 
+moo_pafish <- moorea_fish %>% 
+  filter(Year == "2006") %>% 
   filter(Family == "Scaridae") %>% 
   arrange(desc(Total_Length))
 
@@ -48,5 +49,11 @@ noaa_pfish <- noaa_fish %>%
 
 moo_coral <- moorea_coral %>% 
   arrange(desc(Mortality))
+```
+
+```{r}
+ggplot() +
+  geom_point(data = moo_pfish, aes(x = Total_Length, y = Cloud_Cover, color = Site)) +
+  theme_bw()
 ```
 
