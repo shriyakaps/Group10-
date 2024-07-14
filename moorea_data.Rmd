@@ -16,6 +16,7 @@ library(tidyverse)
 library(here)
 library(lubridate)
 library(ratdat)
+library(ggplot2)
 ```
 
 ```{r}
@@ -119,6 +120,7 @@ ggplot(sim_df)+
 ```{r}
 
 ```
+<<<<<<< HEAD
 #3. Run a paired t-test to see if there are significant differences between the model without stochasticity (from the demo) and with stochasticity. Check the assumptions. What test could you perform instead if the assumptions are not met? (10 points)
 ```{r}
 t.test(exp.simu3, exp.simu4, paired = TRUE, data = "two.sided")
@@ -225,6 +227,31 @@ ggplot(sim_df) +
   theme_bw()+
   labs(x = "Time" , y = "Population Size")
 
+=======
+
+
+```{r}
+moo_alg <- moorea_alg %>% 
+  arrange(desc(Percent_Cover)) %>% 
+  relocate(Percent_Cover, .after = Location)
+
+moo_pafish <- moorea_fish %>% 
+  filter(Year == "2006") %>% 
+  filter(Family == "Scaridae") %>% 
+  arrange(desc(Total_Length))
+
+noaa_pfish <- noaa_fish %>% 
+  arrange(desc(Fork_length_cm))
+
+moo_coral <- moorea_coral %>% 
+  arrange(desc(Mortality))
+```
+
+```{r}
+ggplot() +
+  geom_point(data = moo_pfish, aes(x = Total_Length, y = Cloud_Cover, color = Site)) +
+  theme_bw()
+>>>>>>> 24deb50a05bf728b9071a4e462e09fcc9e758b76
 ```
 #Write a short reflection (~100 words) explaining the results of changing parameter values on your two populations. (10 points)
 
