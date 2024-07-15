@@ -40,7 +40,7 @@ library(ggplot2)
 # moo_pfish <- moorea_fish %>% 
 #   filter(Family == "Scaridae") %>% 
 #   arrange(desc(Total_Length))
-# 
+#   
 # noaa_pfish <- noaa_fish %>% 
 #   arrange(desc(Fork_length_cm))
 ```
@@ -253,6 +253,3 @@ ggplot() +
   theme_bw()
 >>>>>>> 24deb50a05bf728b9071a4e462e09fcc9e758b76
 ```
-#Write a short reflection (~100 words) explaining the results of changing parameter values on your two populations. (10 points)
-
-In the second simulation of competition, I changes the alpha values of the two 

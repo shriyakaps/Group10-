@@ -5,110 +5,23 @@ date: "2024-07-14"
 output: html_document
 ---
 
-```{r}
-b = 3
-d = 0.5
-dd = (3*0.7 -1) / (2 * 0.7 * K)
-t = 1:n
-
-exp.simu3 = rep(NaN,n)
-
-#assigns first value in vector to 100
-exp.simu3[1] <- 100
-exp.simu3[1]
-
-```
-
-```{r}
-for( i in 2:length(exp.simu3)){
-  births = exp.simu3[i-1] * b
-  recruitment = (births * (d / (1+ (dd * births))))
-  deaths = exp.simu3[i-1] * d
-  exp.simu3[i] = exp.simu3[i-1] + recruitment - deaths
-}
-```
-
-```{r}
-sim_df$pop3 = exp.simu3
-
-```
-#1. You will take the last population model created during the live coding demo and choose one element to become stochastic. What this means, is instead of staying constant for the entire simulation, you will use a probability distribution to add variation in each time step. You may choose one of the following parameters:
-
-#Number of births
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
-library(tidyverse)
-library(gam)
-
-```
-
-```{r}
-b = 3
-d = 0.5
-dd = (3*0.7 -1) / (2 * 0.7 * K)
-
-exp.simu4 = rep(NaN,n)
-
-#assigns first value in vector to 100
-exp.simu4[1] <- 100
-exp.simu4[1]
-
-```
-
-```{r}
-for( i in 2:length(exp.simu4)){
-  births = exp.simu4[i-1] * rpois(n=1,b)
-  recruitment = (births * (d / (1+ (dd * births))))
-  deaths = exp.simu4[i-1] * d
-  exp.simu4[i] = exp.simu4[i-1] + recruitment - deaths
-  
-}
-```
-
-
-
-```{r}
-sim_df$pop4 = exp.simu4
-
-ggplot(sim_df)+
-  geom_point(aes(t,pop4), color = "purple")+
-  geom_line(aes(t,pop4), linetype = "dashed")+
-  theme_bw()+
-  labs(x = "Time", y = "Population size")
-```
-```{r}
-
-```
-#3. Run a paired t-test to see if there are significant differences between the model without stochasticity (from the demo) and with stochasticity. Check the assumptions. What test could you perform instead if the assumptions are not met? (10 points)
-```{r}
-t.test(exp.simu3, exp.simu4, paired = TRUE, data = "two.sided")
-``` 
-
-Our p-test was smaller than the standard 0.05 value, meaning that our data is significant. The null hypothesis is rejected, since the mean difference of the two graphs did not equal zero. 
-# -------------------------------------------------------------------------------------------------
-Part 2 
-
-You will take what you learned from the simulation of population growth and create a simulation for either competition or predation
-
-The equations for these are provided in your lecture 4 slides. You can choose your own parameter values (for things such as r, competitive ability, etc. but they must be realistic). The key difference is you will need to keep track of population values for 2 populations instead of 1. (20 points)
-
 Competition: 
 
 ```{r}
-exp.simu5 = rep(NaN, n)
+coral.simu = rep(NaN, n)
 
 #assigns the first value in vector to 100
-exp.simu5[1] <- 100
-exp.simu5[1]
+coral.simu[1] <- 47601
+coral.simu[1]
 
-r1 = 0.78
-K1 = 786
+r1 = 1.215 #coral growth rate
+K1 = 95017
+#recruitment for coral is 0-6 recruits per 510 cm squared
 
-exp.simu6 = rep(NaN, n)
+algae.simu = rep(NaN, n)
 #assigns the first value in vector to 100
-exp.simu6[1] <- 100
-exp.simu6[1]
+algae.simu[1] <- 47825
+algae.simu[1]
 
 r2 = 0.45
 K2 = 1338
