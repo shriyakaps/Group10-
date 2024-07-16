@@ -8,43 +8,63 @@ output: html_document
 Competition: 
 
 ```{r}
-coral.simu = rep(NaN, n)
+coral.simu1 = rep(NaN, n)
 
 #assigns the first value in vector to 100
-coral.simu[1] <- 47601
-coral.simu[1]
+coral.simu1[1] <- 200 #exp.simu5
+coral.simu1[1]
 
-r1 = 1.215 #coral growth rate
-K1 = 95017
-#recruitment for coral is 0-6 recruits per 510 cm squared
+r1 = 1.0215 #coral growth rate
+K1 = 1000
 
-algae.simu = rep(NaN, n)
+algae.simu1 = rep(NaN, n)
 #assigns the first value in vector to 100
-algae.simu[1] <- 47825
-algae.simu[1]
+algae.simu1[1] <- 5 #exp.simu6
+algae.simu1[1]
 
-r2 = 0.45
-K2 = 1338
+r2 = 1.025
+K2 = 10000
 ```
 
 ```{r}
 delta_t <- 1
-alpha1 <- -0.5 
-alpha2 <- -0.3
+alpha1 <- -0.3 # effect of coral on algae
+beta1 <- -0.3 # effect of algae on coral
 
-sim_df <- data.frame( t = 1:50)
+sim_df <- data.frame(t = 1:50)
 
-for(i in 2:length(exp.simu5)) {
-  delta_N1 <- (exp.simu5[i-1] *r1) *((K1-exp.simu5[i-1]+(exp.simu6[i-1]*alpha1))/ K1) * delta_t
-  exp.simu5[i] <- exp.simu5[i-1] + delta_N1
+for(i in 2:length(coral.simu1)) {
+  delta_N1 <- (coral.simu1[i-1] *r1) *((K1-coral.simu1[i-1]+(algae.simu1[i-1]*beta1))/ K1) * delta_t
+  coral.simu1[i] <- coral.simu1[i-1] + delta_N1
   
-  delta_N2 <- (exp.simu6[i-1] *r2) *((K2-exp.simu6[i-1]+(exp.simu5[i-1]*alpha2))/ K2) * delta_t
-  exp.simu6[i] <- exp.simu6[i-1] + delta_N2
+  delta_N2 <- (algae.simu1[i-1] *r2) *((K2-algae.simu1[i-1]+(coral.simu1[i-1]*alpha1))/ K2) * delta_t
+  algae.simu1[i] <- algae.simu1[i-1] + delta_N2
 }
 
-sim_df$pop5 = exp.simu5
-sim_df$pop6 = exp.simu6
+coral.simu1
+print("----------------------------------------------------------")
+algae.simu1
 
+sim_df$pop5 = coral.simu1
+sim_df$pop6 = algae.simu1
+
+#Coral
+ggplot(sim_df) +
+  geom_point(aes(t , pop5), color = "red") +
+  geom_line(aes(t , pop5), linetype = "dashed") +
+  theme_bw() +
+  labs(x = "Time",
+       y = "Coral Population Size")
+
+#Algae
+ggplot(sim_df) +
+  geom_point(aes(t , pop6), color = "blue") +
+  geom_line(aes(t , pop6), linetype = "dashed") +
+  theme_bw() +
+  labs(x = "Time",
+       y = "Algae Population Size")
+
+#Together
 ggplot(sim_df) +
   geom_point(aes(t , pop5), color = "red") +
   geom_line(aes(t , pop5), linetype = "dashed") +
@@ -55,51 +75,69 @@ ggplot(sim_df) +
 
 ```
 ```{r}
-exp.simu7 = rep(NaN, n)
-
+coral.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
-exp.simu7[1] <- 100
-exp.simu7[1]
+coral.simu2[1] <- 200
+coral.simu2[1]
 
-r3 = 0.78
-K3 = 786
+r3 = 1.0215
+K3 = 1000
 
-exp.simu8 = rep(NaN, n)
+algae.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
-exp.simu8[1] <- 100
-exp.simu8[1]
+algae.simu2[1] <- 5
+algae.simu2[1]
 
-r4 = 0.45
-K4 = 1338
+r4 = 1.025
+K4 = 10000
+
+pfish.simu2 = rep(NaN, n)
+#assigns the first value in vector to 100
+pfish.simu2[1] <- 2000
+pfish.simu2[1]
+
+r5 = 1.1
+K5 = 13700
 ```
 
 ```{r}
 delta_t <- 1
-alpha3 <- -0.5
-alpha4 <- -0.9
+
+alpha1 <- -0.3 # effect of coral on algae
+alpha2 <- 0.5 # coral on pfish
+beta1 <- -0.3 # effect of algae on coral
+beta2 <- 0.8 # algae on pfish
+gamma1 <- -0.5 # pfish on coral
+gamma2 <- -0.8 # pfish on algae
 
 sim_df <- data.frame( t = 1:50)
 
-for(i in 2:length(exp.simu7)) {
-  delta_N3 <- (exp.simu7[i-1] *r1) *((K1-exp.simu7[i-1]+(exp.simu8[i-1]*alpha3))/ K1) * delta_t
-  exp.simu7[i] <- exp.simu7[i-1] + delta_N3
+for(i in 2:length(coral.simu2)) {
   
-  delta_N4 <- (exp.simu8[i-1] *r2) *((K2-exp.simu8[i-1]+(exp.simu7[i-1]*alpha4))/ K2) * delta_t
-  exp.simu8[i] <- exp.simu8[i-1] + delta_N4
+  deltaN1 <- (coral.simu2[i-1] * r3) * ( (K3 - coral.simu2[i-1] + (algae.simu2 * beta1) + (pfish.simu2 * gamma2)) / K3) * delta_t
+  coral.simu2[i] <- coral.simu2[i-1] + deltaN1
+
+  deltaN2 <- (algae.simu2[i-1] * r4) * ( (K4 - algae.simu2[i-1] + (coral.simu2 * alpha1) + (pfish.simu2 * gamma1)) / K4) * delta_t
+  algae.simu2[i] <- algae.simu2[i-1] + deltaN2
+
+  deltaN3 <- (pfish.simu2[i-1] * r5) * ( (K5 - pfish.simu2[i-1] + (coral.simu2 * alpha2) + (algae.simu2 * beta2)) / K5) * delta_t
+  pfish.simu2[i] <- pfish.simu2[i-1] + deltaN3
+  
 }
 
-sim_df$pop7 = exp.simu7
-sim_df$pop8 = exp.simu8
+sim_df$pop7 = coral.simu2
+sim_df$pop8 = algae.simu2
+sim_df$pop9 = pfish.simu2
 
 ggplot(sim_df) +
-  geom_point(aes(t , pop7), color = "green") +
+  geom_point(aes(t , pop7), color = "red") +
   geom_line(aes(t , pop7), linetype = "dashed") +
-  geom_point(aes(t , pop8), color = "purple") +
+  geom_point(aes(t , pop8), color = "blue") +
   geom_line(aes(t , pop8), linetype = "dashed") +
+  geom_point(aes(t , pop9), color = "purple") +
+  geom_line(aes(t , pop9), linetype = "dashed") +
   theme_bw()+
   labs(x = "Time" , y = "Population Size")
-
 ```
-#Write a short reflection (~100 words) explaining the results of changing parameter values on your two populations. (10 points)
 
-In the second simulation of competition, I changes the alpha values of the two 
+
