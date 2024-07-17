@@ -40,14 +40,16 @@ library(ggplot2)
 # moo_pfish <- moorea_fish %>% 
 #   filter(Family == "Scaridae") %>% 
 #   arrange(desc(Total_Length))
-#   
+# 
 # noaa_pfish <- noaa_fish %>% 
 #   arrange(desc(Fork_length_cm))
 ```
 
 ```{r}
 b = 3
+n = 50
 d = 0.5
+K = 1000
 dd = (3*0.7 -1) / (2 * 0.7 * K)
 t = 1:n
 
@@ -76,8 +78,7 @@ sim_df$pop3 = exp.simu3
 
 #Number of births
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```{r}
 library(tidyverse)
 library(gam)
 
@@ -226,9 +227,7 @@ ggplot(sim_df) +
   geom_line(aes(t , pop8), linetype = "dashed") +
   theme_bw()+
   labs(x = "Time" , y = "Population Size")
-
-=======
-
+```
 
 ```{r}
 moo_alg <- moorea_alg %>% 
@@ -251,5 +250,7 @@ moo_coral <- moorea_coral %>%
 ggplot() +
   geom_point(data = moo_pfish, aes(x = Total_Length, y = Cloud_Cover, color = Site)) +
   theme_bw()
->>>>>>> 24deb50a05bf728b9071a4e462e09fcc9e758b76
 ```
+#Write a short reflection (~100 words) explaining the results of changing parameter values on your two populations. (10 points)
+
+In the second simulation of competition, I changes the alpha values of the two 

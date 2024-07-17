@@ -8,6 +8,8 @@ output: html_document
 Competition: 
 
 ```{r}
+n = 50
+
 coral.simu1 = rep(NaN, n)
 
 #assigns the first value in vector to 100
@@ -19,19 +21,19 @@ K1 = 1000
 
 algae.simu1 = rep(NaN, n)
 #assigns the first value in vector to 100
-algae.simu1[1] <- 5 #exp.simu6
+algae.simu1[1] <- 50 #exp.simu6
 algae.simu1[1]
 
 r2 = 1.025
-K2 = 10000
+K2 = 2000
 ```
 
 ```{r}
 delta_t <- 1
-alpha1 <- -0.3 # effect of coral on algae
+alpha1 <- 0.3 # effect of coral on algae
 beta1 <- -0.3 # effect of algae on coral
 
-sim_df <- data.frame(t = 1:50)
+sim_df <- data.frame(t = 1:n)
 
 for(i in 2:length(coral.simu1)) {
   delta_N1 <- (coral.simu1[i-1] *r1) *((K1-coral.simu1[i-1]+(algae.simu1[i-1]*beta1))/ K1) * delta_t
@@ -89,7 +91,7 @@ algae.simu2[1] <- 5
 algae.simu2[1]
 
 r4 = 1.025
-K4 = 10000
+K4 = 2000
 
 pfish.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
@@ -97,7 +99,7 @@ pfish.simu2[1] <- 2000
 pfish.simu2[1]
 
 r5 = 1.1
-K5 = 13700
+K5 = 5000
 ```
 
 ```{r}
@@ -110,7 +112,7 @@ beta2 <- 0.8 # algae on pfish
 gamma1 <- -0.5 # pfish on coral
 gamma2 <- -0.8 # pfish on algae
 
-sim_df <- data.frame( t = 1:50)
+sim_df <- data.frame(t = 1:n)
 
 for(i in 2:length(coral.simu2)) {
   
