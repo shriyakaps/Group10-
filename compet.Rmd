@@ -3,6 +3,8 @@ title: "compet"
 author: "Shriya Kapavarapu"
 date: "2024-07-14"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 Competition: 
@@ -25,7 +27,7 @@ algae.simu1[1] <- 50 #exp.simu6
 algae.simu1[1]
 
 r2 = 1.025
-K2 = 2000
+K2 = 10000
 ```
 
 ```{r}
@@ -33,7 +35,7 @@ delta_t <- 1
 alpha1 <- 0.3 # effect of coral on algae
 beta1 <- -0.3 # effect of algae on coral
 
-sim_df <- data.frame(t = 1:n)
+sim_df1 <- data.frame(t = 1:n)
 
 for(i in 2:length(coral.simu1)) {
   delta_N1 <- (coral.simu1[i-1] *r1) *((K1-coral.simu1[i-1]+(algae.simu1[i-1]*beta1))/ K1) * delta_t
@@ -47,33 +49,39 @@ coral.simu1
 print("----------------------------------------------------------")
 algae.simu1
 
-sim_df$pop5 = coral.simu1
-sim_df$pop6 = algae.simu1
+sim_df1$coral = coral.simu1
+sim_df1$algae = algae.simu1
 
-#Coral
-ggplot(sim_df) +
-  geom_point(aes(t , pop5), color = "red") +
-  geom_line(aes(t , pop5), linetype = "dashed") +
-  theme_bw() +
-  labs(x = "Time",
-       y = "Coral Population Size")
+sim_df_tidy1 <- sim_df1 %>% 
+  pivot_longer(cols = coral:algae,
+               names_to = "Species",
+               values_to = "pop_size")
 
-#Algae
-ggplot(sim_df) +
-  geom_point(aes(t , pop6), color = "blue") +
-  geom_line(aes(t , pop6), linetype = "dashed") +
-  theme_bw() +
-  labs(x = "Time",
-       y = "Algae Population Size")
+ggplot(sim_df_tidy1, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size)) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
+  labs(x = "Time (years)",
+       y = "Population Size")
 
 #Together
-ggplot(sim_df) +
-  geom_point(aes(t , pop5), color = "red") +
-  geom_line(aes(t , pop5), linetype = "dashed") +
-  geom_point(aes(t , pop6), color = "blue") +
-  geom_line(aes(t , pop6), linetype = "dashed") +
+ggplot(sim_df1) +
+  geom_point(aes(t , coral), color = "red") +
+  geom_line(aes(t , coral), linetype = "dashed") +
+  geom_point(aes(t , algae), color = "blue") +
+  geom_line(aes(t , algae), linetype = "dashed") +
   theme_bw()+
   labs(x = "Time" , y = "Population Size")
+
+#ENCHANCED
+ggplot(sim_df1) +
+  geom_point(aes(t , coral), color = "red") +
+  geom_line(aes(t , coral), linetype = "dashed") +
+  geom_point(aes(t , algae), color = "blue") +
+  geom_line(aes(t , algae), linetype = "dashed") +
+  theme_bw()+
+  labs(x = "Time (years)" , y = "Population Size") +
+  xlim(0, 10)
 
 ```
 ```{r}
@@ -87,11 +95,11 @@ K3 = 1000
 
 algae.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
-algae.simu2[1] <- 5
+algae.simu2[1] <- 50
 algae.simu2[1]
 
 r4 = 1.025
-K4 = 2000
+K4 = 10000
 
 pfish.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
@@ -99,7 +107,7 @@ pfish.simu2[1] <- 2000
 pfish.simu2[1]
 
 r5 = 1.1
-K5 = 5000
+K5 = 13700
 ```
 
 ```{r}
@@ -127,19 +135,47 @@ for(i in 2:length(coral.simu2)) {
   
 }
 
-sim_df$pop7 = coral.simu2
-sim_df$pop8 = algae.simu2
-sim_df$pop9 = pfish.simu2
+sim_df$coral = coral.simu2
+sim_df$algae = algae.simu2
+sim_df$pfish = pfish.simu2
 
+sim_df_tidy <- sim_df %>% 
+  pivot_longer(cols = coral:pfish,
+               names_to = "Species",
+               values_to = "pop_size")
+
+ggplot(sim_df_tidy, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size)) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
+  labs(x = "Time (years)",
+       y = "Population Size")
+
+#all three
 ggplot(sim_df) +
-  geom_point(aes(t , pop7), color = "red") +
-  geom_line(aes(t , pop7), linetype = "dashed") +
-  geom_point(aes(t , pop8), color = "blue") +
-  geom_line(aes(t , pop8), linetype = "dashed") +
-  geom_point(aes(t , pop9), color = "purple") +
-  geom_line(aes(t , pop9), linetype = "dashed") +
+  geom_point(aes(t , coral), color = "red") +
+  geom_line(aes(t , coral), linetype = "dashed") +
+  geom_point(aes(t , algae), color = "blue") +
+  geom_line(aes(t , algae), linetype = "dashed") +
+  geom_point(aes(t , pfish), color = "purple") +
+  geom_line(aes(t , pfish), linetype = "dashed") +
   theme_bw()+
-  labs(x = "Time" , y = "Population Size")
+  labs(x = "Time (years)",
+       y = "Population Size")
+
+#ENCHANCED
+ggplot(sim_df) +
+  geom_point(aes(t , coral), color = "red") +
+  geom_line(aes(t , coral), linetype = "dashed") +
+  geom_point(aes(t , algae), color = "blue") +
+  geom_line(aes(t , algae), linetype = "dashed") +
+  geom_point(aes(t , pfish), color = "purple") +
+  geom_line(aes(t , pfish), linetype = "dashed") +
+  theme_bw()+
+  labs(x = "Time (years)",
+       y = "Population Size") +
+  xlim(0, 10)
+
 ```
 
 
