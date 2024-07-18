@@ -66,19 +66,19 @@ ggplot(sim_df_tidy1, aes(color = Species)) +
 
 #Together
 ggplot(sim_df1) +
-  geom_point(aes(t , coral), color = "red") +
-  geom_line(aes(t , coral), linetype = "dashed") +
-  geom_point(aes(t , algae), color = "blue") +
-  geom_line(aes(t , algae), linetype = "dashed") +
+  geom_point(aes(t , coral), color = "green") +
+  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
+  geom_point(aes(t , algae), color = "indianred") +
+  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
   theme_bw()+
   labs(x = "Time" , y = "Population Size")
 
 #ENCHANCED
 ggplot(sim_df1) +
-  geom_point(aes(t , coral), color = "red") +
-  geom_line(aes(t , coral), linetype = "dashed") +
-  geom_point(aes(t , algae), color = "blue") +
-  geom_line(aes(t , algae), linetype = "dashed") +
+  geom_point(aes(t , coral), color = "green") +
+  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
+  geom_point(aes(t , algae), color = "indianred") +
+  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
   theme_bw()+
   labs(x = "Time (years)" , y = "Population Size") +
   xlim(0, 10)
@@ -153,24 +153,24 @@ ggplot(sim_df_tidy, aes(color = Species)) +
 
 #all three
 ggplot(sim_df) +
-  geom_point(aes(t , coral), color = "red") +
-  geom_line(aes(t , coral), linetype = "dashed") +
-  geom_point(aes(t , algae), color = "blue") +
-  geom_line(aes(t , algae), linetype = "dashed") +
-  geom_point(aes(t , pfish), color = "purple") +
-  geom_line(aes(t , pfish), linetype = "dashed") +
+  geom_point(aes(t , coral), color = "green") +
+  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
+  geom_point(aes(t , algae), color = "indianred") +
+  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
+  geom_point(aes(t , pfish), color = "skyblue") +
+  geom_line(aes(t , pfish), linetype = "dashed", color = "skyblue") +
   theme_bw()+
   labs(x = "Time (years)",
        y = "Population Size")
 
 #ENCHANCED
 ggplot(sim_df) +
-  geom_point(aes(t , coral), color = "red") +
-  geom_line(aes(t , coral), linetype = "dashed") +
-  geom_point(aes(t , algae), color = "blue") +
-  geom_line(aes(t , algae), linetype = "dashed") +
-  geom_point(aes(t , pfish), color = "purple") +
-  geom_line(aes(t , pfish), linetype = "dashed") +
+  geom_point(aes(t , coral), color = "green") +
+  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
+  geom_point(aes(t , algae), color = "indianred") +
+  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
+  geom_point(aes(t , pfish), color = "skyblue") +
+  geom_line(aes(t , pfish), linetype = "dashed", color = "skyblue") +
   theme_bw()+
   labs(x = "Time (years)",
        y = "Population Size") +
