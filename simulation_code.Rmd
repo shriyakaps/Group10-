@@ -4,8 +4,22 @@ author: "Shriya, Vivaan, Luke"
 date: "2024-07-14"
 output: html_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+``` 
+
+```{r}
+library(tidyverse)
+library(here)
+library(lubridate)
+library(ratdat)
+library(ggplot2)
+```
 
 Competition: 
 
@@ -77,7 +91,7 @@ ggplot(sim_df_tidy1, aes(color = Species)) +
 ```{r}
 coral.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
-coral.simu2[1] <- 200
+coral.simu2[1] <- 500
 coral.simu2[1]
 
 r3 = 1.0215
@@ -114,16 +128,22 @@ sim_df <- data.frame(t = 1:n)
 
 for(i in 2:length(coral.simu2)) {
   
-  deltaN1 <- (coral.simu2[i-1] * r3) * ( (K3 - coral.simu2[i-1] + (algae.simu2 * beta1) + (pfish.simu2 * gamma2)) / K3) * delta_t
+  deltaN1 <- (coral.simu2[i-1] * r3) * ( (K3 - coral.simu2[i-1] + (algae.simu2 * beta1) + (pfish.simu2 * gamma1)) / K3) * delta_t
   coral.simu2[i] <- coral.simu2[i-1] + deltaN1
 
-  deltaN2 <- (algae.simu2[i-1] * r4) * ( (K4 - algae.simu2[i-1] + (coral.simu2 * alpha1) + (pfish.simu2 * gamma1)) / K4) * delta_t
+  deltaN2 <- (algae.simu2[i-1] * r4) * ( (K4 - algae.simu2[i-1] + (coral.simu2 * alpha1) + (pfish.simu2 * gamma2)) / K4) * delta_t
   algae.simu2[i] <- algae.simu2[i-1] + deltaN2
 
   deltaN3 <- (pfish.simu2[i-1] * r5) * ( (K5 - pfish.simu2[i-1] + (coral.simu2 * alpha2) + (algae.simu2 * beta2)) / K5) * delta_t
   pfish.simu2[i] <- pfish.simu2[i-1] + deltaN3
   
 }
+
+coral.simu2
+print("-------------------------------------------------------------")
+algae.simu2
+print("-------------------------------------------------------------")
+pfish.simu2
 
 sim_df$coral = coral.simu2
 sim_df$algae = algae.simu2
@@ -149,7 +169,7 @@ ggplot(sim_df_tidy, aes(color = Species)) +
   theme_minimal() +
   labs(x = "Time (years)",
        y = "Population Size") +
-  xlim(0, 10)
+  xlim(01 , 10)
 ```
 
 
