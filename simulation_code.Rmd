@@ -89,6 +89,34 @@ ggplot(sim_df_tidy1, aes(color = Species)) +
   xlim(0,10)
 ```
 ```{r}
+mean_coral <- 0
+for (i in 25:length(coral.simu1)) {
+  mean_coral = mean_coral + coral.simu1[i]
+}
+mean_coral = mean_coral / 25
+
+mean_algae <- 0
+for (i in 25:length(algae.simu1)) {
+  mean_algae = mean_algae + algae.simu1[i]
+}
+mean_algae = mean_algae / 25
+
+mean_equilibrium <- c(mean_coral, mean_algae)
+
+species_list <- c("Coral", "Algae")
+
+data <- data.frame(species_list, mean_equilibrium)
+
+ggplot(data) +
+  geom_col(aes(x = species_list, y = mean_equilibrium, fill = species_list)) +
+  theme_bw() +
+  labs(x = "Species",
+       y = "Equilibrium Population") +
+  scale_y_log10()
+```
+
+
+```{r}
 coral.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
 coral.simu2[1] <- 500
@@ -172,4 +200,35 @@ ggplot(sim_df_tidy, aes(color = Species)) +
   xlim(01 , 10)
 ```
 
+```{r}
+mean_coral <- 0
+for (i in 25:length(coral.simu2)) {
+  mean_coral = mean_coral + coral.simu2[i]
+}
+mean_coral = mean_coral / 25
+
+mean_algae <- 0
+for (i in 25:length(algae.simu2)) {
+  mean_algae = mean_algae + algae.simu2[i]
+}
+mean_algae = mean_algae / 25
+
+mean_pfish <- 0
+for (i in 25:length(pfish.simu2)) {
+  mean_pfish = mean_pfish + pfish.simu2[i]
+}
+
+mean_equilibrium <- c(mean_coral, mean_algae, mean_pfish)
+
+species_list <- c("Coral", "Algae", "Parrotfish")
+
+data <- data.frame(species_list, mean_equilibrium)
+
+ggplot(data) +
+  geom_col(aes(x = species_list, y = mean_equilibrium, fill = species_list)) +
+  theme_bw() +
+  labs(x = "Species",
+       y = "log of Equilibrium Population") +
+  scale_y_log10()
+```
 
