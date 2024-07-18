@@ -1,6 +1,6 @@
 ---
-title: "compet"
-author: "Shriya Kapavarapu"
+title: "GROUP 10 SIMULATION"
+author: "Shriya, Vivaan, Luke"
 date: "2024-07-14"
 output: html_document
 editor_options: 
@@ -57,6 +57,7 @@ sim_df_tidy1 <- sim_df1 %>%
                names_to = "Species",
                values_to = "pop_size")
 
+#together (legend)
 ggplot(sim_df_tidy1, aes(color = Species)) +
   geom_point(aes(x = t, y = pop_size)) +
   geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
@@ -64,25 +65,14 @@ ggplot(sim_df_tidy1, aes(color = Species)) +
   labs(x = "Time (years)",
        y = "Population Size")
 
-#Together
-ggplot(sim_df1) +
-  geom_point(aes(t , coral), color = "green") +
-  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
-  geom_point(aes(t , algae), color = "indianred") +
-  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
-  theme_bw()+
-  labs(x = "Time" , y = "Population Size")
-
-#ENCHANCED
-ggplot(sim_df1) +
-  geom_point(aes(t , coral), color = "green") +
-  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
-  geom_point(aes(t , algae), color = "indianred") +
-  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
-  theme_bw()+
-  labs(x = "Time (years)" , y = "Population Size") +
-  xlim(0, 10)
-
+#enhanced (legend)
+ggplot(sim_df_tidy1, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size)) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
+  labs(x = "Time (years)",
+       y = "Population Size") +
+  xlim(0,10)
 ```
 ```{r}
 coral.simu2 = rep(NaN, n)
@@ -144,6 +134,7 @@ sim_df_tidy <- sim_df %>%
                names_to = "Species",
                values_to = "pop_size")
 
+#all three (legend)
 ggplot(sim_df_tidy, aes(color = Species)) +
   geom_point(aes(x = t, y = pop_size)) +
   geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
@@ -151,31 +142,14 @@ ggplot(sim_df_tidy, aes(color = Species)) +
   labs(x = "Time (years)",
        y = "Population Size")
 
-#all three
-ggplot(sim_df) +
-  geom_point(aes(t , coral), color = "green") +
-  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
-  geom_point(aes(t , algae), color = "indianred") +
-  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
-  geom_point(aes(t , pfish), color = "skyblue") +
-  geom_line(aes(t , pfish), linetype = "dashed", color = "skyblue") +
-  theme_bw()+
-  labs(x = "Time (years)",
-       y = "Population Size")
-
-#ENCHANCED
-ggplot(sim_df) +
-  geom_point(aes(t , coral), color = "green") +
-  geom_line(aes(t , coral), linetype = "dashed", color = "green") +
-  geom_point(aes(t , algae), color = "indianred") +
-  geom_line(aes(t , algae), linetype = "dashed", color = "indianred") +
-  geom_point(aes(t , pfish), color = "skyblue") +
-  geom_line(aes(t , pfish), linetype = "dashed", color = "skyblue") +
-  theme_bw()+
+#enhanced (legend)
+ggplot(sim_df_tidy, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size)) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
   labs(x = "Time (years)",
        y = "Population Size") +
   xlim(0, 10)
-
 ```
 
 
