@@ -19,6 +19,7 @@ library(here)
 library(lubridate)
 library(ratdat)
 library(ggplot2)
+library(patchwork)
 ```
 
 Competition: 
@@ -72,21 +73,26 @@ sim_df_tidy1 <- sim_df1 %>%
                values_to = "pop_size")
 
 #together (legend)
-ggplot(sim_df_tidy1, aes(color = Species)) +
-  geom_point(aes(x = t, y = pop_size)) +
-  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
-  theme_minimal() +
-  labs(x = "Time (years)",
-       y = "Population Size")
-
-#enhanced (legend)
-ggplot(sim_df_tidy1, aes(color = Species)) +
+together_sim1 <- ggplot(sim_df_tidy1, aes(color = Species)) +
   geom_point(aes(x = t, y = pop_size)) +
   geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
   theme_minimal() +
   labs(x = "Time (years)",
        y = "Population Size") +
-  xlim(0,10)
+  ylim(0, 15000)
+
+#enhanced (legend)
+enhanced_sim1 <-ggplot(sim_df_tidy1, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size)) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
+  labs(x = "Time (years)",
+       y = "Population Size") +
+  xlim(0,10) +
+  ylim(0, 15000)
+
+together_sim1
+enhanced_sim1
 ```
 ```{r}
 mean_coral <- 0
@@ -107,12 +113,14 @@ species_list <- c("Coral", "Algae")
 
 data <- data.frame(species_list, mean_equilibrium)
 
-ggplot(data) +
+equilirium_sim1 <- ggplot(data) +
   geom_col(aes(x = species_list, y = mean_equilibrium, fill = species_list)) +
   theme_bw() +
   labs(x = "Species",
        y = "log of Equilibrium Population") +
   scale_y_log10()
+
+equilirium_sim1
 ```
 
 
@@ -183,21 +191,26 @@ sim_df_tidy <- sim_df %>%
                values_to = "pop_size")
 
 #all three (legend)
-ggplot(sim_df_tidy, aes(color = Species)) +
-  geom_point(aes(x = t, y = pop_size)) +
-  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
-  theme_minimal() +
-  labs(x = "Time (years)",
-       y = "Population Size")
-
-#enhanced (legend)
-ggplot(sim_df_tidy, aes(color = Species)) +
+together_sim2 <- ggplot(sim_df_tidy, aes(color = Species)) +
   geom_point(aes(x = t, y = pop_size)) +
   geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
   theme_minimal() +
   labs(x = "Time (years)",
        y = "Population Size") +
-  xlim(01 , 10)
+  ylim(0, 15000)
+
+#enhanced (legend)
+enhanced_sim2 <- ggplot(sim_df_tidy, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size)) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
+  labs(x = "Time (years)",
+       y = "Population Size") +
+  xlim(0, 10) +
+  ylim(0, 15000)
+
+together_sim2
+enhanced_sim2
 ```
 
 ```{r}
@@ -227,11 +240,18 @@ species_list <- c("Coral", "Algae", "Parrotfish")
 
 data <- data.frame(species_list, mean_equilibrium)
 
-ggplot(data) +
+equilibrium_sim2 <- ggplot(data) +
   geom_col(aes(x = species_list, y = mean_equilibrium, fill = species_list)) +
   theme_bw() +
   labs(x = "Species",
        y = "log of Equilibrium Population") +
   scale_y_log10()
+
+equilibrium_sim2
+```
+```{r}
+(together_sim1 + together_sim2)
+(enhanced_sim1 + enhanced_sim2)
+(equilirium_sim1 + equilibrium_sim2)
 ```
 
