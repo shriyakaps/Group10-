@@ -111,7 +111,7 @@ ggplot(data) +
   geom_col(aes(x = species_list, y = mean_equilibrium, fill = species_list)) +
   theme_bw() +
   labs(x = "Species",
-       y = "Equilibrium Population") +
+       y = "log of Equilibrium Population") +
   scale_y_log10()
 ```
 
@@ -217,6 +217,9 @@ mean_pfish <- 0
 for (i in 25:length(pfish.simu2)) {
   mean_pfish = mean_pfish + pfish.simu2[i]
 }
+
+log(mean_equilibrium)
+mean_equilibrium
 
 mean_equilibrium <- c(mean_coral, mean_algae, mean_pfish)
 
