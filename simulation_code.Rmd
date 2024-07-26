@@ -30,7 +30,7 @@ n = 50
 coral.simu1 = rep(NaN, n)
 
 #assigns the first value in vector to 100
-coral.simu1[1] <- 200 #exp.simu5
+coral.simu1[1] <- 500 #exp.simu5
 coral.simu1[1]
 
 r1 = 1.0215 #coral growth rate
@@ -47,7 +47,7 @@ K2 = 10000
 
 ```{r}
 delta_t <- 1
-alpha1 <- 0.3 # effect of coral on algae
+alpha1 <- -0.3 # effect of coral on algae
 beta1 <- -0.3 # effect of algae on coral
 
 sim_df1 <- data.frame(t = 1:n)
@@ -55,6 +55,9 @@ sim_df1 <- data.frame(t = 1:n)
 for(i in 2:length(coral.simu1)) {
   delta_N1 <- (coral.simu1[i-1] *r1) *((K1-coral.simu1[i-1]+(algae.simu1[i-1]*beta1))/ K1) * delta_t
   coral.simu1[i] <- coral.simu1[i-1] + delta_N1
+  if (coral.simu1[i] < 0) {
+    coral.simu1[i] = 0
+  }
   
   delta_N2 <- (algae.simu1[i-1] *r2) *((K2-algae.simu1[i-1]+(coral.simu1[i-1]*alpha1))/ K2) * delta_t
   algae.simu1[i] <- algae.simu1[i-1] + delta_N2
@@ -68,61 +71,51 @@ sim_df1$coral = coral.simu1
 sim_df1$algae = algae.simu1
 
 sim_df_tidy1 <- sim_df1 %>% 
+  mutate(coral = coral/K1,
+         algae = algae/K2) %>% 
   pivot_longer(cols = coral:algae,
                names_to = "Species",
                values_to = "pop_size")
 
 #together (legend)
 together_sim1 <- ggplot(sim_df_tidy1, aes(color = Species)) +
-  geom_point(aes(x = t, y = pop_size)) +
+  geom_point(aes(x = t, y = pop_size), size = 4) +
   geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
   theme_minimal() +
+  scale_color_manual(values = c("red", "green")) +
   labs(x = "Time (years)",
-       y = "Population Size") +
-  ylim(0, 15000)
-
-#enhanced (legend)
-enhanced_sim1 <-ggplot(sim_df_tidy1, aes(color = Species)) +
-  geom_point(aes(x = t, y = pop_size)) +
-  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
-  theme_minimal() +
-  labs(x = "Time (years)",
-       y = "Population Size") +
-  xlim(0,10) +
-  ylim(0, 15000)
+       y = "N / K")
 
 together_sim1
-enhanced_sim1
 ```
 ```{r}
-mean_coral <- 0
-for (i in 25:length(coral.simu1)) {
-  mean_coral = mean_coral + coral.simu1[i]
-}
-mean_coral = mean_coral / 25
+mean_equilibrium <- c(coral.simu1[length(coral.simu1)] / K1, algae.simu1[length(algae.simu1)] / K2)
 
-mean_algae <- 0
-for (i in 25:length(algae.simu1)) {
-  mean_algae = mean_algae + algae.simu1[i]
-}
-mean_algae = mean_algae / 25
+Species <- c("Coral", "Algae")
 
-mean_equilibrium <- c(mean_coral, mean_algae)
-
-species_list <- c("Coral", "Algae")
-
-data <- data.frame(species_list, mean_equilibrium)
+data <- data.frame(Species, mean_equilibrium)
 
 equilirium_sim1 <- ggplot(data) +
-  geom_col(aes(x = species_list, y = mean_equilibrium, fill = species_list)) +
+  geom_col(aes(x = Species, y = mean_equilibrium, fill = Species)) +
   theme_bw() +
   labs(x = "Species",
-       y = "log of Equilibrium Population") +
-  scale_y_log10()
+       y = "Equilibrium N / K") +
+  scale_fill_manual(values = c("red", "green"))
 
 equilirium_sim1
+mean_equilibrium
 ```
+```{r}
+coralsim1 <- ggplot(sim_df1) +
+  geom_point(aes(x = t, y = coral/K1), color = "green", size = 4) +
+  geom_line(aes(x = t , y = coral/K1), color = "green", linetype = "dashed") + 
+  theme_minimal() +
+  labs(x = "Time (years)",
+       y = "Coral N / K") +
+  ylim(0, 1)
 
+coralsim1
+```
 
 ```{r}
 coral.simu2 = rep(NaN, n)
@@ -143,11 +136,11 @@ K4 = 10000
 
 pfish.simu2 = rep(NaN, n)
 #assigns the first value in vector to 100
-pfish.simu2[1] <- 2000
+pfish.simu2[1] <- 750
 pfish.simu2[1]
 
 r5 = 1.1
-K5 = 13700
+K5 = 5000
 ```
 
 ```{r}
@@ -166,6 +159,9 @@ for(i in 2:length(coral.simu2)) {
   
   deltaN1 <- (coral.simu2[i-1] * r3) * ( (K3 - coral.simu2[i-1] + (algae.simu2 * beta1) + (pfish.simu2 * gamma1)) / K3) * delta_t
   coral.simu2[i] <- coral.simu2[i-1] + deltaN1
+  if (coral.simu2[i] < 0) {
+    coral.simu2[i] = 0
+  }
 
   deltaN2 <- (algae.simu2[i-1] * r4) * ( (K4 - algae.simu2[i-1] + (coral.simu2 * alpha1) + (pfish.simu2 * gamma2)) / K4) * delta_t
   algae.simu2[i] <- algae.simu2[i-1] + deltaN2
@@ -183,75 +179,87 @@ pfish.simu2
 
 sim_df$coral = coral.simu2
 sim_df$algae = algae.simu2
-sim_df$pfish = pfish.simu2
+sim_df$parrotfish = pfish.simu2
 
 sim_df_tidy <- sim_df %>% 
-  pivot_longer(cols = coral:pfish,
+  mutate(coral = coral/K3,
+         algae = algae/K4,
+         parrotfish = parrotfish/K5) %>% 
+  pivot_longer(cols = coral:parrotfish,
                names_to = "Species",
                values_to = "pop_size")
 
 #all three (legend)
 together_sim2 <- ggplot(sim_df_tidy, aes(color = Species)) +
-  geom_point(aes(x = t, y = pop_size)) +
+  geom_point(aes(x = t, y = pop_size), size = 4) +
   geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
   theme_minimal() +
+  scale_color_manual(values = c("red", "green", "skyblue")) +
   labs(x = "Time (years)",
-       y = "Population Size") +
-  ylim(0, 15000)
-
-#enhanced (legend)
-enhanced_sim2 <- ggplot(sim_df_tidy, aes(color = Species)) +
-  geom_point(aes(x = t, y = pop_size)) +
-  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
-  theme_minimal() +
-  labs(x = "Time (years)",
-       y = "Population Size") +
-  xlim(0, 10) +
-  ylim(0, 15000)
+       y = "N / K")
 
 together_sim2
-enhanced_sim2
 ```
 
 ```{r}
-mean_coral <- 0
-for (i in 25:length(coral.simu2)) {
-  mean_coral = mean_coral + coral.simu2[i]
-}
-mean_coral = mean_coral / 25
+mean_equilibrium <- c(coral.simu2[length(coral.simu2)] / K3, algae.simu2[length(algae.simu2)] / K4, pfish.simu2[length(pfish.simu2)] / K5)
 
-mean_algae <- 0
-for (i in 25:length(algae.simu2)) {
-  mean_algae = mean_algae + algae.simu2[i]
-}
-mean_algae = mean_algae / 25
-
-mean_pfish <- 0
-for (i in 25:length(pfish.simu2)) {
-  mean_pfish = mean_pfish + pfish.simu2[i]
-}
-
-log(mean_equilibrium)
 mean_equilibrium
 
-mean_equilibrium <- c(mean_coral, mean_algae, mean_pfish)
+Species <- c("Coral", "Algae", "Parrotfish")
 
-species_list <- c("Coral", "Algae", "Parrotfish")
-
-data <- data.frame(species_list, mean_equilibrium)
+data <- data.frame(Species, mean_equilibrium)
 
 equilibrium_sim2 <- ggplot(data) +
-  geom_col(aes(x = species_list, y = mean_equilibrium, fill = species_list)) +
+  geom_col(aes(x = Species, y = mean_equilibrium, fill = Species)) +
   theme_bw() +
+  scale_fill_manual(values = c("red", "green", "skyblue")) +
   labs(x = "Species",
-       y = "log of Equilibrium Population") +
-  scale_y_log10()
+       y = "Equilibrium N / K")
 
 equilibrium_sim2
 ```
 ```{r}
-(together_sim1 + together_sim2)
+coralsim2 <- ggplot(sim_df) +
+  geom_point(aes(x = t, y = coral/K3), color = "green", size = 4) +
+  geom_line(aes(x = t , y = coral/K3), color = "green", linetype = "dashed") + 
+  theme_minimal() +
+  labs(x = "Time (years)",
+       y = "Coral N / K") +
+  ylim(0, 1)
+
+coralsim2
+```
+
+```{r}
+#together (legend)
+together_sim1_1.1 <- ggplot(sim_df_tidy1, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size), size = 4) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
+  scale_color_manual(values = c("red", "green")) +
+  labs(x = "Time (years)",
+       y = "N / K") +
+  ylim(0, 1.1)
+
+together_sim1_1.1
+
+together_sim2_1.1 <- ggplot(sim_df_tidy, aes(color = Species)) +
+  geom_point(aes(x = t, y = pop_size), size = 4) +
+  geom_line(aes(x = t , y = pop_size), linetype = "dashed") + 
+  theme_minimal() +
+  scale_color_manual(values = c("red", "green", "skyblue")) +
+  labs(x = "Time (years)",
+       y = "N / K") +
+  ylim(0, 1.1)
+
+together_sim2_1.1
+```
+
+```{r}
+(together_sim1_1.1 + together_sim2_1.1)
 (enhanced_sim1 + enhanced_sim2)
 (equilirium_sim1 + equilibrium_sim2)
+(coralsim1 + coralsim2)
 ```
 
